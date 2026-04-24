@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Non ho sentito bene!</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <main class="app">
+    <section id="home" class="screen active">
+      <div class="card hero">
+        <p class="eyebrow">Non ho sentito bene!</p>
+        <h1>Sei pronta a parlare?</h1>
+        <p class="subtitle">Un piccolo sito per allenare la voce, una frase alla volta.</p>
+        <div class="button-row">
+          <button class="primary" data-go="voice-check">Sì, ci provo</button>
+          <button class="secondary" data-go="voice-check">No, ma mi conosci… quindi sì</button>
+        </div>
+      </div>
+    </section>
+
+    <section id="voice-check" class="screen">
+      <div class="card">
+        <p class="eyebrow">Mini controllo voce</p>
+        <h2>Non ho sentito… non mi fregare 😏</h2>
+        <p>Dillo ad alta voce. Appena ti sento, ti faccio passare.</p>
+
+        <div class="meter-wrap">
+          <div class="meter-label">
+            <span>Volume rilevato</span>
+            <strong id="volumeLabel">0%</strong>
+          </div>
+          <div class="meter">
+            <div id="volumeBar"></div>
+          </div>
+        </div>
+
+        <label class="range-label" for="sensitivity">
+          Sensibilità microfono
+          <span id="sensitivityLabel">45%</span>
+        </label>
+        <input id="sensitivity" type="range" min="5" max="95" value="45" />
+
+        <p id="micStatus" class="hint">Premi “Attiva microfono” e parla.</p>
+
+        <div class="button-row">
+          <button id="startMic" class="primary">Attiva microfono</button>
+          <button id="voiceContinue" class="primary locked" disabled>Ok, ti ho sentita</button>
+          <button id="skipMic" class="ghost">Disattiva controllo voce</button>
+        </div>
+      </div>
+    </section>
+
+    <section id="dashboard" class="screen">
+      <div class="topbar">
+        <div>
+          <p class="eyebrow">Dashboard</p>
+          <h2>Cosa leggiamo oggi?</h2>
+        </div>
+        <button id="resetToday" class="ghost small">Azzera oggi</button>
+      </div>
+
+      <div class="stats-grid">
+        <div class="stat-card">
+          <span>Oggi</span>
+          <strong id="todayCount">0</strong>
+          <small>frasi lette</small>
+        </div>
+        <div class="stat-card">
+          <span>Totale</span>
+          <strong id="totalCount">0</strong>
+          <small>frasi lette</small>
+        </div>
+        <div class="stat-card">
+          <span>Serie</span>
+          <strong id="streakCount">0</strong>
+          <small>giorni di fila</small>
+        </div>
+      </div>
+
+      <div id="badgeBox" class="badge-box"></div>
+
+      <div class="quick-actions">
+        <button id="randomPick" class="primary">Scegli tu per me</button>
+        <button id="continueLast" class="secondary">Continua da dove eri rimasta</button>
+      </div>
+
+      <div id="categories" class="category-grid"></div>
+    </section>
+
+    <section id="reader" class="screen">
+      <div class="topbar">
+        <button id="backToCategories" class="ghost small">← Categorie</button>
+        <button id="readerMicToggle" class="ghost small">Voce: attiva</button>
+      </div>
+
+      <div class="card reader-card">
+        <p id="categoryName" class="eyebrow"></p>
+        <h2 id="promptTitle">Leggi ad alta voce</h2>
+        <div id="promptText" class="prompt-text"></div>
+
+        <div id="readerVoiceBox" class="reader-voice-box">
+          <div class="meter tiny">
+            <div id="readerVolumeBar"></div>
+          </div>
+          <p id="readerMicStatus" class="hint">Parla per sbloccare il pulsante “L’ho letto”.</p>
+        </div>
+
+        <p id="encouragement" class="encouragement"></p>
+
+        <div class="button-row">
+          <button id="markRead" class="primary locked" disabled>L’ho letto ad alta voce</button>
+          <button id="nextPrompt" class="secondary">Un altro</button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="data.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
