@@ -11,7 +11,9 @@ const state = {
   audioContext: null,
   analyser: null,
   micStream: null,
+  micSource: null,
   volumeLoop: null,
+  noiseFloor: 0,
   progress: loadProgress()
 };
 
@@ -102,9 +104,7 @@ function getUnreadIndexes(category) {
 
 function chooseUnreadIndex(category) {
   const unread = getUnreadIndexes(category);
-  if (unread.length > 0) {
-    return randomFrom(unread);
-  }
+  if (unread.length > 0) return randomFrom(unread);
   return Math.floor(Math.random() * SPEAKING_DATA[category][1].length);
 }
 
@@ -129,25 +129,28 @@ function renderDashboard() {
 
   categoriesEl.innerHTML = "";
 
-  getCategoryEntries().forEach(([key, [name, prompts]]) => {
+  getCategoryEntries().forEach(([key, [name]]) => {
+    const info = getCategoryReadInfo(key);
     const card = document.createElement("button");
     card.className = "category-card";
-    const info = getCategoryReadInfo(key);
     card.innerHTML = `<h3>${name}</h3><p>${info.read}/${info.total} letti · ${info.unread} nuovi</p>`;
     card.addEventListener("click", () => openCategory(key));
     categoriesEl.appendChild(card);
   });
 }
 
-function openCategory(key, index = null) {
+async function openCategory(key, index = null) {
   state.category = key;
   state.progress.lastCategory = key;
   saveProgress();
 
-  const prompts = getCurrentPrompts();
   state.promptIndex = index ?? chooseUnreadIndex(key);
   renderReader();
   showScreen("reader");
+
+  if (state.readerMicEnabled) {
+    await startMicrophone("reader");
+  }
 }
 
 function renderReader() {
@@ -160,6 +163,11 @@ function renderReader() {
 
   state.readerHeardVoice = !state.readerMicEnabled;
   updateMarkReadButton();
+
+  if (state.readerMicEnabled) {
+    document.getElementById("readerMicStatus").textContent = "Parla ad alta voce: appena ti sento, sblocco il pulsante.";
+    document.getElementById("readerVolumeBar").style.width = "0%";
+  }
 }
 
 function updateMarkReadButton() {
@@ -183,6 +191,7 @@ function nextPrompt() {
     document.getElementById("encouragement").textContent = "Hai letto tutte le frasi di questa categoria. Ora posso ripescare qualche vecchia gloria.";
   }
   renderReader();
+  if (state.readerMicEnabled) startMicrophone("reader");
 }
 
 function markRead() {
@@ -207,65 +216,156 @@ function markRead() {
   updateStatsUI();
 
   const remaining = getUnreadIndexes(state.category).length;
-  document.getElementById("encouragement").textContent = `${randomFrom(encouragements)} Oggi: ${state.progress.todayCount} · Totale: ${state.progress.totalCount} · Nuove rimaste qui: ${remaining}`;
+  document.getElementById("encouragement").textContent =
+    `${randomFrom(encouragements)} Oggi: ${state.progress.todayCount} · Totale: ${state.progress.totalCount} · Nuove rimaste qui: ${remaining}`;
+
   setTimeout(nextPrompt, 1400);
 }
 
+/**
+ * Rilevamento voce migliorato.
+ * Prima usava la media delle frequenze: spesso è troppo bassa.
+ * Ora usa RMS sul segnale nel tempo + calibrazione rumore ambiente.
+ */
 async function startMicrophone(mode = "check") {
+  const statusEl = mode === "reader"
+    ? document.getElementById("readerMicStatus")
+    : document.getElementById("micStatus");
+
   try {
+    if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+      throw new Error("getUserMedia non supportato");
+    }
+
     if (!state.audioContext) {
       state.audioContext = new (window.AudioContext || window.webkitAudioContext)();
     }
 
-    if (!state.micStream) {
-      state.micStream = await navigator.mediaDevices.getUserMedia({ audio: true });
-      const source = state.audioContext.createMediaStreamSource(state.micStream);
-      state.analyser = state.audioContext.createAnalyser();
-      state.analyser.fftSize = 256;
-      source.connect(state.analyser);
+    if (state.audioContext.state === "suspended") {
+      await state.audioContext.resume();
     }
 
-    listenToVolume(mode);
+    if (!state.micStream) {
+      state.micStream = await navigator.mediaDevices.getUserMedia({
+        audio: {
+          echoCancellation: false,
+          noiseSuppression: false,
+          autoGainControl: true
+        }
+      });
+
+      state.micSource = state.audioContext.createMediaStreamSource(state.micStream);
+      state.analyser = state.audioContext.createAnalyser();
+      state.analyser.fftSize = 2048;
+      state.analyser.smoothingTimeConstant = 0.15;
+      state.micSource.connect(state.analyser);
+    }
+
+    if (statusEl) statusEl.textContent = "Sto ascoltando. Parla normalmente, anche solo una frase.";
+
+    calibrateNoiseFloor();
+    listenToVoice(mode);
     return true;
   } catch (error) {
-    const message = "Microfono non disponibile. Puoi disattivare il controllo voce.";
-    document.getElementById("micStatus").textContent = message;
-    document.getElementById("readerMicStatus").textContent = message;
+    console.error(error);
+    if (statusEl) {
+      statusEl.textContent = "Microfono non disponibile o permesso negato. Puoi disattivare il controllo voce.";
+    }
     return false;
   }
 }
 
-function listenToVolume(mode) {
+function getMicLevelPercent() {
+  if (!state.analyser) return 0;
+
+  const buffer = new Uint8Array(state.analyser.fftSize);
+  state.analyser.getByteTimeDomainData(buffer);
+
+  let sumSquares = 0;
+  for (let i = 0; i < buffer.length; i++) {
+    const value = (buffer[i] - 128) / 128;
+    sumSquares += value * value;
+  }
+
+  const rms = Math.sqrt(sumSquares / buffer.length);
+
+  // Boost intenzionale: voci normali su laptop spesso danno RMS basso.
+  return Math.min(100, Math.round(rms * 420));
+}
+
+function calibrateNoiseFloor() {
+  // Calibrazione semplice e continua: parte dal livello ambiente attuale.
+  const level = getMicLevelPercent();
+  if (!state.noiseFloor || state.noiseFloor <= 0) {
+    state.noiseFloor = Math.max(2, level);
+  } else {
+    state.noiseFloor = Math.round((state.noiseFloor * 0.9) + (level * 0.1));
+  }
+}
+
+function getSensitivityThreshold(mode) {
+  const sliderValue = Number(document.getElementById("sensitivity").value || 45);
+
+  // Slider alto = più difficile. Ma limitiamo per evitare soglie impossibili.
+  const sliderThreshold = Math.max(4, Math.min(32, Math.round(sliderValue / 3)));
+
+  // Serve superare sia una soglia minima sia il rumore di fondo.
+  const noiseThreshold = state.noiseFloor + (mode === "reader" ? 5 : 6);
+
+  return Math.max(sliderThreshold, noiseThreshold);
+}
+
+function unlockVoiceCheck() {
+  state.heardVoice = true;
+  document.getElementById("micStatus").textContent = "Ok, questa volta ti credo. Ti ho sentita.";
+  const continueButton = document.getElementById("voiceContinue");
+  continueButton.disabled = false;
+  continueButton.classList.remove("locked");
+}
+
+function unlockReaderVoice() {
+  state.readerHeardVoice = true;
+  document.getElementById("readerMicStatus").textContent = "Ti ho sentita. Ora puoi confermare.";
+  updateMarkReadButton();
+}
+
+function listenToVoice(mode) {
   cancelAnimationFrame(state.volumeLoop);
 
-  const data = new Uint8Array(state.analyser.frequencyBinCount);
+  let voiceFrames = 0;
 
   function tick() {
-    state.analyser.getByteFrequencyData(data);
-    const average = data.reduce((sum, value) => sum + value, 0) / data.length;
-    const percent = Math.min(100, Math.round((average / 120) * 100));
-    const threshold = Number(document.getElementById("sensitivity").value);
+    const level = getMicLevelPercent();
+    const threshold = getSensitivityThreshold(mode);
+    const displayPercent = Math.min(100, Math.round((level / Math.max(threshold, 1)) * 65));
 
     if (mode === "check") {
-      document.getElementById("volumeBar").style.width = `${percent}%`;
-      document.getElementById("volumeLabel").textContent = `${percent}%`;
+      document.getElementById("volumeBar").style.width = `${Math.min(100, level * 3)}%`;
+      document.getElementById("volumeLabel").textContent = `${level}%`;
 
-      if (percent > threshold) {
-        state.heardVoice = true;
-        document.getElementById("micStatus").textContent = "Ok, questa volta ti credo.";
-        const continueButton = document.getElementById("voiceContinue");
-        continueButton.disabled = false;
-        continueButton.classList.remove("locked");
+      if (level >= threshold) {
+        voiceFrames += 1;
+      } else {
+        voiceFrames = Math.max(0, voiceFrames - 1);
+      }
+
+      // Bastano pochi frame consecutivi: così non serve urlare.
+      if (!state.heardVoice && voiceFrames >= 3) {
+        unlockVoiceCheck();
       }
     }
 
     if (mode === "reader") {
-      document.getElementById("readerVolumeBar").style.width = `${percent}%`;
+      document.getElementById("readerVolumeBar").style.width = `${Math.min(100, level * 3)}%`;
 
-      if (percent > threshold * 0.75) {
-        state.readerHeardVoice = true;
-        document.getElementById("readerMicStatus").textContent = "Ti ho sentita. Ora puoi confermare.";
-        updateMarkReadButton();
+      if (level >= threshold) {
+        voiceFrames += 1;
+      } else {
+        voiceFrames = Math.max(0, voiceFrames - 1);
+      }
+
+      if (!state.readerHeardVoice && voiceFrames >= 3) {
+        unlockReaderVoice();
       }
     }
 
@@ -281,11 +381,17 @@ document.querySelectorAll("[data-go]").forEach(button => {
 
 document.getElementById("sensitivity").addEventListener("input", event => {
   document.getElementById("sensitivityLabel").textContent = `${event.target.value}%`;
+  state.noiseFloor = 0;
 });
 
 document.getElementById("startMic").addEventListener("click", async () => {
+  state.heardVoice = false;
+  const continueButton = document.getElementById("voiceContinue");
+  continueButton.disabled = true;
+  continueButton.classList.add("locked");
+
   const ok = await startMicrophone("check");
-  if (ok) document.getElementById("micStatus").textContent = "Sto ascoltando. Di’ qualcosa.";
+  if (ok) document.getElementById("micStatus").textContent = "Sto ascoltando. Parla normalmente, non serve urlare.";
 });
 
 document.getElementById("voiceContinue").addEventListener("click", () => {
@@ -335,14 +441,5 @@ document.getElementById("resetToday").addEventListener("click", () => {
   saveProgress();
   renderDashboard();
 });
-
-// Start reader microphone automatically when entering the reader if possible.
-const originalOpenCategory = openCategory;
-openCategory = async function(key, index = null) {
-  originalOpenCategory(key, index);
-  if (state.readerMicEnabled) {
-    await startMicrophone("reader");
-  }
-};
 
 renderDashboard();
