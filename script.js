@@ -58,6 +58,16 @@ function saveProgress() {
   localStorage.setItem("nhsb-progress", JSON.stringify(state.progress));
 }
 
+function updateStatsUI() {
+  const today = document.getElementById("todayCount");
+  const total = document.getElementById("totalCount");
+  const streak = document.getElementById("streakCount");
+
+  if (today) today.textContent = state.progress.todayCount;
+  if (total) total.textContent = state.progress.totalCount;
+  if (streak) streak.textContent = state.progress.streak;
+}
+
 function showScreen(id) {
   screens.forEach(screen => screen.classList.toggle("active", screen.id === id));
   if (id === "dashboard") renderDashboard();
@@ -105,9 +115,7 @@ function getCategoryReadInfo(category) {
 }
 
 function renderDashboard() {
-  document.getElementById("todayCount").textContent = state.progress.todayCount;
-  document.getElementById("totalCount").textContent = state.progress.totalCount;
-  document.getElementById("streakCount").textContent = state.progress.streak;
+  updateStatsUI();
 
   const badges = [];
   if (state.progress.totalCount >= 5) badges.push("🌱 5 frasi: voce riscaldata");
@@ -179,13 +187,10 @@ function nextPrompt() {
 
 function markRead() {
   const key = getReadKey(state.category, state.promptIndex);
-  const alreadyRead = Boolean(state.progress.readItems[key]);
   state.progress.readItems[key] = true;
 
-  if (!alreadyRead) {
-    state.progress.todayCount += 1;
-    state.progress.totalCount += 1;
-  }
+  state.progress.todayCount += 1;
+  state.progress.totalCount += 1;
 
   const today = todayKey();
   if (state.progress.lastReadDate !== today) {
@@ -199,8 +204,11 @@ function markRead() {
   }
 
   saveProgress();
-  document.getElementById("encouragement").textContent = randomFrom(encouragements);
-  setTimeout(nextPrompt, 900);
+  updateStatsUI();
+
+  const remaining = getUnreadIndexes(state.category).length;
+  document.getElementById("encouragement").textContent = `${randomFrom(encouragements)} Oggi: ${state.progress.todayCount} · Totale: ${state.progress.totalCount} · Nuove rimaste qui: ${remaining}`;
+  setTimeout(nextPrompt, 1400);
 }
 
 async function startMicrophone(mode = "check") {
@@ -338,4 +346,3 @@ openCategory = async function(key, index = null) {
 };
 
 renderDashboard();
-
