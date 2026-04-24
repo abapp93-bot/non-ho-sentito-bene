@@ -99,9 +99,9 @@ const SPEAKING_DATA = {
       "Gli elefanti usano vibrazioni a bassa frequenza. Alcuni suoni viaggiano per lunghe distanze attraverso aria e terreno. La comunicazione può essere potente anche quando noi non la sentiamo bene.",
       "Le tartarughe possono vivere molto a lungo. Alcune specie superano facilmente molti decenni di vita. La lentezza non impedisce una lunga carriera.",
       "I cactus conservano acqua nei tessuti. Le spine riducono perdita d’acqua e proteggono dagli animali. Sono piante progettate per resistere dove altri mollano.",
-      "Curiosità extra numero 1. Questo testo aggiunge un contenuto breve ma leggibile ad alta voce. L’obiettivo è mantenere allenamento, chiarezza e continuità senza usare frasi vuote.",
-      "Curiosità extra numero 2. Questo testo aggiunge un contenuto breve ma leggibile ad alta voce. L’obiettivo è mantenere allenamento, chiarezza e continuità senza usare frasi vuote.",
-      "Curiosità extra numero 3. Questo testo aggiunge un contenuto breve ma leggibile ad alta voce. L’obiettivo è mantenere allenamento, chiarezza e continuità senza usare frasi vuote."
+      "Le tartarughe giganti delle Galápagos possono vivere oltre cento anni. La loro lentezza è famosa, ma il loro metabolismo e il loro stile di vita contribuiscono alla longevità. Sono animali che sembrano portare addosso un pezzo di storia naturale.",
+      "Il latte degli ippopotami non è rosa, anche se questa leggenda gira spesso online. La loro pelle produce secrezioni rossastre che proteggono dal sole e dai batteri. Il mito nasce probabilmente da una confusione tra secrezioni cutanee e latte.",
+      "Alcuni uccelli dormono con metà cervello alla volta. Questo si chiama sonno uni-emisferico ed è utile durante migrazioni o situazioni di pericolo. Una parte resta vigile mentre l’altra riposa."
     ]
   ],
   "storia": [
@@ -204,9 +204,9 @@ const SPEAKING_DATA = {
       "I Fenici furono grandi navigatori e commercianti. Fondarono colonie nel Mediterraneo, tra cui Cartagine. Diffusero un alfabeto che influenzò molte scritture successive.",
       "Cartagine fu una grande potenza mediterranea. Combatté contro Roma nelle guerre puniche. Annibale attraversò le Alpi con il suo esercito durante la seconda guerra punica.",
       "Augusto divenne il primo imperatore romano. Dopo anni di guerre civili, instaurò il principato. Il suo governo aprì una lunga fase di stabilità chiamata Pax Romana.",
-      "Evento storico extra numero 1. Questo testo aggiunge un contenuto breve ma leggibile ad alta voce. L’obiettivo è mantenere allenamento, chiarezza e continuità senza usare frasi vuote.",
-      "Evento storico extra numero 2. Questo testo aggiunge un contenuto breve ma leggibile ad alta voce. L’obiettivo è mantenere allenamento, chiarezza e continuità senza usare frasi vuote.",
-      "Evento storico extra numero 3. Questo testo aggiunge un contenuto breve ma leggibile ad alta voce. L’obiettivo è mantenere allenamento, chiarezza e continuità senza usare frasi vuote."
+      "La scrittura nacque in Mesopotamia più di cinquemila anni fa. All’inizio serviva soprattutto per contabilità, magazzini e amministrazione. Prima di diventare poesia e letteratura, fu uno strumento molto pratico.",
+      "La battaglia di Azio avvenne nel 31 a.C. Ottaviano sconfisse le forze di Marco Antonio e Cleopatra. Dopo quella vittoria, Ottaviano divenne il dominatore del mondo romano e poi assunse il titolo di Augusto.",
+      "La Guerra di Corea iniziò nel 1950 e terminò con un armistizio nel 1953. Vide contrapposti Corea del Nord, sostenuta da Cina e Unione Sovietica, e Corea del Sud, sostenuta dalle Nazioni Unite guidate dagli Stati Uniti. La penisola coreana rimase divisa."
     ]
   ],
   "geografia": [
@@ -311,7 +311,7 @@ const SPEAKING_DATA = {
       "La Pampa argentina è una vasta pianura fertile. È importante per agricoltura e allevamento. Ha avuto un ruolo centrale nell’economia del paese.",
       "Il Rio de la Plata è un grande estuario. Si forma dall’unione di Paraná e Uruguay. Bagna città importanti come Buenos Aires e Montevideo.",
       "Il Capo di Buona Speranza si trova in Sudafrica. È vicino al punto in cui si incontrano correnti oceaniche importanti. Fu un luogo simbolico nelle rotte marittime verso l’Asia.",
-      "Luogo geografico extra numero 1. Questo testo aggiunge un contenuto breve ma leggibile ad alta voce. L’obiettivo è mantenere allenamento, chiarezza e continuità senza usare frasi vuote."
+      "Il Monte Fuji è uno dei simboli del Giappone. È un vulcano alto oltre 3.700 metri e si trova non lontano da Tokyo. La sua forma quasi perfetta lo rende una delle montagne più riconoscibili al mondo."
     ]
   ],
   "scienze": [
@@ -413,10 +413,10 @@ const SPEAKING_DATA = {
       "La genetica studia ereditarietà e variazione. I geni influenzano caratteristiche ma interagiscono con l’ambiente. Il risultato finale è spesso più complesso di una singola causa.",
       "Le mutazioni sono cambiamenti nel DNA. Possono essere dannose, neutre o vantaggiose. Sono una fonte importante di variabilità biologica.",
       "La meiosi produce cellule riproduttive. Riduce a metà il numero di cromosomi. È essenziale per la riproduzione sessuata.",
-      "Concetto scientifico extra numero 1. Questo testo aggiunge un contenuto breve ma leggibile ad alta voce. L’obiettivo è mantenere allenamento, chiarezza e continuità senza usare frasi vuote.",
-      "Concetto scientifico extra numero 2. Questo testo aggiunge un contenuto breve ma leggibile ad alta voce. L’obiettivo è mantenere allenamento, chiarezza e continuità senza usare frasi vuote.",
-      "Concetto scientifico extra numero 3. Questo testo aggiunge un contenuto breve ma leggibile ad alta voce. L’obiettivo è mantenere allenamento, chiarezza e continuità senza usare frasi vuote.",
-      "Concetto scientifico extra numero 4. Questo testo aggiunge un contenuto breve ma leggibile ad alta voce. L’obiettivo è mantenere allenamento, chiarezza e continuità senza usare frasi vuote."
+      "Le comete sono corpi celesti formati da ghiaccio, polveri e rocce. Quando si avvicinano al Sole, il calore fa sublimare parte del ghiaccio e crea una chioma luminosa. La coda della cometa punta spesso lontano dal Sole a causa del vento solare.",
+      "Gli asteroidi sono frammenti rocciosi che orbitano intorno al Sole. Molti si trovano nella fascia principale tra Marte e Giove. Studiare gli asteroidi aiuta a capire meglio la formazione del Sistema Solare.",
+      "Il telescopio permette di raccogliere più luce dell’occhio umano. Per questo rende visibili stelle, galassie e nebulose molto lontane. Non avvicina davvero gli oggetti, ma ci permette di osservare segnali debolissimi.",
+      "Il microscopio ha aperto un mondo invisibile. Grazie a esso gli scienziati hanno osservato cellule, batteri e strutture minuscole. Molta medicina moderna sarebbe impossibile senza questa capacità di vedere il piccolo."
     ]
   ],
   "psicologia": [
@@ -510,18 +510,18 @@ const SPEAKING_DATA = {
       "La voce tremante non significa incapacità. Può essere una risposta fisiologica all’attivazione emotiva. Il corpo partecipa quando qualcosa ci importa.",
       "Il feedback utile è specifico. Dire cosa funziona e cosa migliorare aiuta più di un giudizio generico. Il cervello ha bisogno di indicazioni concrete.",
       "La fiducia si costruisce anche mantenendo piccole promesse. Completare un gesto semplice rinforza l’idea di essere affidabili. Una frase letta davvero può contare più di un grande piano abbandonato.",
-      "Concetto psicologico extra numero 1. Questo testo aggiunge un contenuto breve ma leggibile ad alta voce. L’obiettivo è mantenere allenamento, chiarezza e continuità senza usare frasi vuote.",
-      "Concetto psicologico extra numero 2. Questo testo aggiunge un contenuto breve ma leggibile ad alta voce. L’obiettivo è mantenere allenamento, chiarezza e continuità senza usare frasi vuote.",
-      "Concetto psicologico extra numero 3. Questo testo aggiunge un contenuto breve ma leggibile ad alta voce. L’obiettivo è mantenere allenamento, chiarezza e continuità senza usare frasi vuote.",
-      "Concetto psicologico extra numero 4. Questo testo aggiunge un contenuto breve ma leggibile ad alta voce. L’obiettivo è mantenere allenamento, chiarezza e continuità senza usare frasi vuote.",
-      "Concetto psicologico extra numero 5. Questo testo aggiunge un contenuto breve ma leggibile ad alta voce. L’obiettivo è mantenere allenamento, chiarezza e continuità senza usare frasi vuote.",
-      "Concetto psicologico extra numero 6. Questo testo aggiunge un contenuto breve ma leggibile ad alta voce. L’obiettivo è mantenere allenamento, chiarezza e continuità senza usare frasi vuote.",
-      "Concetto psicologico extra numero 7. Questo testo aggiunge un contenuto breve ma leggibile ad alta voce. L’obiettivo è mantenere allenamento, chiarezza e continuità senza usare frasi vuote.",
-      "Concetto psicologico extra numero 8. Questo testo aggiunge un contenuto breve ma leggibile ad alta voce. L’obiettivo è mantenere allenamento, chiarezza e continuità senza usare frasi vuote.",
-      "Concetto psicologico extra numero 9. Questo testo aggiunge un contenuto breve ma leggibile ad alta voce. L’obiettivo è mantenere allenamento, chiarezza e continuità senza usare frasi vuote.",
-      "Concetto psicologico extra numero 10. Questo testo aggiunge un contenuto breve ma leggibile ad alta voce. L’obiettivo è mantenere allenamento, chiarezza e continuità senza usare frasi vuote.",
-      "Concetto psicologico extra numero 11. Questo testo aggiunge un contenuto breve ma leggibile ad alta voce. L’obiettivo è mantenere allenamento, chiarezza e continuità senza usare frasi vuote.",
-      "Concetto psicologico extra numero 12. Questo testo aggiunge un contenuto breve ma leggibile ad alta voce. L’obiettivo è mantenere allenamento, chiarezza e continuità senza usare frasi vuote."
+      "L’effetto alone avviene quando una caratteristica positiva influenza il giudizio su tutta una persona. Per esempio, chi appare sicuro può essere percepito anche come più competente. È un bias comune nelle relazioni e nelle valutazioni.",
+      "L’effetto spettatore descrive la tendenza ad aiutare meno quando sono presenti molte persone. Ognuno può pensare che interverrà qualcun altro. La responsabilità si distribuisce e l’azione si blocca.",
+      "La memoria prospettica è la capacità di ricordarsi di fare qualcosa in futuro. Serve per appuntamenti, medicine, telefonate e piccoli impegni quotidiani. Quando fallisce, non dimentichiamo il passato, ma il futuro.",
+      "La memoria semantica contiene conoscenze generali sul mondo. Sapere che Roma è la capitale d’Italia o che l’acqua bolle a circa cento gradi appartiene a questo tipo di memoria. Non è legata a un episodio specifico.",
+      "La memoria episodica riguarda eventi personali vissuti. Ricordare una festa, una conversazione o un viaggio significa recuperare un episodio. È una parte importante della nostra identità.",
+      "L’attenzione divisa è la capacità di seguire più compiti nello stesso momento. In realtà spesso passiamo rapidamente da un compito all’altro, con perdita di efficienza. Il multitasking ha un costo più alto di quanto sembri.",
+      "La fatica decisionale compare quando troppe scelte consumano energia mentale. Dopo molte decisioni, possiamo scegliere peggio o evitare di scegliere. Anche il cervello ha bisogno di semplificare.",
+      "La motivazione può aumentare quando il progresso è visibile. Un contatore, una lista o un piccolo traguardo aiutano a percepire il movimento. Vedere che qualcosa cresce rende più facile continuare.",
+      "L’abitudine si costruisce collegando un comportamento a un segnale. Se leggo dopo il caffè, il caffè diventa promemoria. Il cervello ama le associazioni ripetute.",
+      "La ricompensa immediata rende un comportamento più attraente. Per questo è utile associare un’abitudine difficile a qualcosa di piacevole. Non è barare, è progettare meglio l’ambiente.",
+      "L’autoregolazione è la capacità di guidare pensieri, emozioni e azioni verso un obiettivo. Non significa controllare tutto, ma scegliere una direzione anche quando ci sono distrazioni. È una competenza che si allena.",
+      "La teoria dell’autodeterminazione parla di tre bisogni psicologici: autonomia, competenza e relazione. Quando ci sentiamo liberi, capaci e connessi, la motivazione cresce. Non siamo macchine da produttività."
     ]
   ],
   "inglese": [
@@ -728,10 +728,10 @@ const SPEAKING_DATA = {
       "L’architettura razionalista cerca ordine e funzione. Linee semplici e volumi chiari diventano centrali. La decorazione viene ridotta al minimo.",
       "Il colore rosso può comunicare energia, pericolo o passione. Il significato cambia in base a cultura e contesto. In arte nessun colore è completamente neutro.",
       "Il colore oro è stato spesso legato a sacralità e potere. Nei mosaici bizantini creava luce spirituale. Il materiale comunicava valore prima ancora dell’immagine.",
-      "Opera o stile artistico extra numero 1. Questo testo aggiunge un contenuto breve ma leggibile ad alta voce. L’obiettivo è mantenere allenamento, chiarezza e continuità senza usare frasi vuote.",
-      "Opera o stile artistico extra numero 2. Questo testo aggiunge un contenuto breve ma leggibile ad alta voce. L’obiettivo è mantenere allenamento, chiarezza e continuità senza usare frasi vuote.",
-      "Opera o stile artistico extra numero 3. Questo testo aggiunge un contenuto breve ma leggibile ad alta voce. L’obiettivo è mantenere allenamento, chiarezza e continuità senza usare frasi vuote.",
-      "Opera o stile artistico extra numero 4. Questo testo aggiunge un contenuto breve ma leggibile ad alta voce. L’obiettivo è mantenere allenamento, chiarezza e continuità senza usare frasi vuote."
+      "La Pietà di Michelangelo si trova nella Basilica di San Pietro. Fu scolpita quando l’artista era ancora molto giovane. Il marmo rende con straordinaria delicatezza il dolore e la calma della scena.",
+      "Il Cenacolo di Leonardo da Vinci fu dipinto a Milano, nel refettorio di Santa Maria delle Grazie. Rappresenta il momento in cui Gesù annuncia il tradimento. L’opera è fragile perché Leonardo sperimentò una tecnica non tradizionale per il muro.",
+      "La ragazza con l’orecchino di perla fu dipinta da Johannes Vermeer nel Seicento. Non è un ritratto ufficiale, ma una tronie, cioè uno studio di volto e carattere. Lo sguardo della ragazza rende l’immagine immediata e misteriosa.",
+      "La Grande Onda di Kanagawa è una celebre stampa di Hokusai. Fu realizzata nel Giappone dell’Ottocento e mostra un’onda gigantesca davanti al Monte Fuji. La composizione unisce forza naturale, equilibrio e sintesi grafica."
     ]
   ],
   "cucina": [
@@ -834,9 +834,9 @@ const SPEAKING_DATA = {
       "L’affumicatura conserva e insaporisce gli alimenti. Il fumo contiene composti aromatici. Pesce, carne e formaggi possono cambiare profondamente.",
       "La cottura sottovuoto mantiene temperatura controllata. Il cibo viene sigillato e cotto lentamente in acqua. È precisa e usata anche nella ristorazione moderna.",
       "La mise en place significa preparare ingredienti e strumenti prima di cucinare. È fondamentale nelle cucine professionali. Riduce errori e stress durante la preparazione.",
-      "Preparazione culinaria extra numero 1. Questo testo aggiunge un contenuto breve ma leggibile ad alta voce. L’obiettivo è mantenere allenamento, chiarezza e continuità senza usare frasi vuote.",
-      "Preparazione culinaria extra numero 2. Questo testo aggiunge un contenuto breve ma leggibile ad alta voce. L’obiettivo è mantenere allenamento, chiarezza e continuità senza usare frasi vuote.",
-      "Preparazione culinaria extra numero 3. Questo testo aggiunge un contenuto breve ma leggibile ad alta voce. L’obiettivo è mantenere allenamento, chiarezza e continuità senza usare frasi vuote."
+      "Il ragù alla bolognese richiede una cottura lenta. Tradizionalmente usa carne, soffritto, vino, pomodoro e latte o brodo secondo le versioni. Il tempo permette ai sapori di fondersi e diventare profondi.",
+      "La focaccia genovese è morbida dentro e leggermente croccante fuori. Si prepara con olio, sale e una salamoia che crea la superficie caratteristica. È semplice solo in apparenza: equilibrio e lievitazione contano molto.",
+      "Il risotto alla milanese è riconoscibile per il colore giallo dello zafferano. È spesso associato alla tradizione lombarda e può accompagnare l’ossobuco. Il profumo dello zafferano rende il piatto elegante e deciso."
     ]
   ],
   "cinema": [
@@ -936,12 +936,12 @@ const SPEAKING_DATA = {
       "Le saghe creano continuità tra più film. Personaggi e mondi si sviluppano nel tempo. Il pubblico torna perché riconosce un universo.",
       "Il cameo è una breve apparizione speciale. Può essere di un attore, regista o personaggio noto. È un piccolo regalo per chi guarda con attenzione.",
       "Il ralenti rallenta il movimento. Può aumentare dramma, bellezza o tensione. Un gesto normale diventa solenne.",
-      "Tecnica o genere cinematografico extra numero 1. Questo testo aggiunge un contenuto breve ma leggibile ad alta voce. L’obiettivo è mantenere allenamento, chiarezza e continuità senza usare frasi vuote.",
-      "Tecnica o genere cinematografico extra numero 2. Questo testo aggiunge un contenuto breve ma leggibile ad alta voce. L’obiettivo è mantenere allenamento, chiarezza e continuità senza usare frasi vuote.",
-      "Tecnica o genere cinematografico extra numero 3. Questo testo aggiunge un contenuto breve ma leggibile ad alta voce. L’obiettivo è mantenere allenamento, chiarezza e continuità senza usare frasi vuote.",
-      "Tecnica o genere cinematografico extra numero 4. Questo testo aggiunge un contenuto breve ma leggibile ad alta voce. L’obiettivo è mantenere allenamento, chiarezza e continuità senza usare frasi vuote.",
-      "Tecnica o genere cinematografico extra numero 5. Questo testo aggiunge un contenuto breve ma leggibile ad alta voce. L’obiettivo è mantenere allenamento, chiarezza e continuità senza usare frasi vuote.",
-      "Tecnica o genere cinematografico extra numero 6. Questo testo aggiunge un contenuto breve ma leggibile ad alta voce. L’obiettivo è mantenere allenamento, chiarezza e continuità senza usare frasi vuote."
+      "La regola dei terzi è una tecnica di composizione visiva. Divide l’inquadratura in una griglia immaginaria e posiziona i soggetti lungo linee o incroci. Aiuta a creare immagini più equilibrate e dinamiche.",
+      "La profondità di campo indica quanta parte dell’immagine è a fuoco. Una profondità ridotta isola un personaggio dallo sfondo. Una profondità ampia mostra più chiaramente lo spazio intorno.",
+      "Il montaggio sonoro costruisce l’ambiente acustico di un film. Rumori, passi, vento e oggetti danno credibilità alla scena. Spesso non li notiamo proprio perché funzionano bene.",
+      "La luce naturale può dare realismo a una scena. Molti registi la usano per ottenere un’immagine più spontanea o intima. Richiede però grande attenzione, perché cambia continuamente.",
+      "Il green screen permette di sostituire lo sfondo in post-produzione. Gli attori recitano davanti a un fondale verde o blu. In seguito vengono aggiunti ambienti digitali, creature o paesaggi impossibili.",
+      "Il cinema in bianco e nero non è solo una limitazione tecnica del passato. Ancora oggi può essere scelto per motivi estetici. Contrasto, forme e luce diventano protagonisti assoluti."
     ]
   ],
   "musica": [
@@ -1044,9 +1044,9 @@ const SPEAKING_DATA = {
       "L’accordatura prepara gli strumenti a suonare insieme. Il la a 440 hertz è uno standard molto usato. Senza accordatura l’insieme perde chiarezza.",
       "La musica da camera nasce per piccoli gruppi. Era pensata per ambienti più intimi rispetto ai grandi teatri. Richiede ascolto reciproco molto preciso.",
       "La canzone d’autore mette grande attenzione al testo. In Italia nomi come De André, Dalla e Guccini sono centrali. Le parole diventano parte essenziale della musica.",
-      "Elemento musicale extra numero 1. Questo testo aggiunge un contenuto breve ma leggibile ad alta voce. L’obiettivo è mantenere allenamento, chiarezza e continuità senza usare frasi vuote.",
-      "Elemento musicale extra numero 2. Questo testo aggiunge un contenuto breve ma leggibile ad alta voce. L’obiettivo è mantenere allenamento, chiarezza e continuità senza usare frasi vuote.",
-      "Elemento musicale extra numero 3. Questo testo aggiunge un contenuto breve ma leggibile ad alta voce. L’obiettivo è mantenere allenamento, chiarezza e continuità senza usare frasi vuote."
+      "Il tempo rubato permette piccole libertà nel ritmo. È molto usato nell’interpretazione romantica, specialmente al pianoforte. Non significa suonare a caso, ma respirare musicalmente dentro la frase.",
+      "La tonalità indica il centro armonico di un brano. Una canzone in Do maggiore ruota intorno a Do come punto di riferimento. Cambiare tonalità può modificare colore e difficoltà di esecuzione.",
+      "La modulazione è il passaggio da una tonalità a un’altra. Può creare sorpresa, energia o senso di crescita. In molte canzoni arriva verso la fine per aumentare intensità."
     ]
   ]
 };
