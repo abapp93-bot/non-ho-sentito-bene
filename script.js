@@ -75,6 +75,35 @@ function getCurrentPrompts() {
   return SPEAKING_DATA[state.category][1];
 }
 
+function getReadKey(category, index) {
+  return `${category}-${index}`;
+}
+
+function getUnreadIndexes(category) {
+  const prompts = SPEAKING_DATA[category][1];
+  const unread = [];
+  for (let i = 0; i < prompts.length; i++) {
+    if (!state.progress.readItems[getReadKey(category, i)]) {
+      unread.push(i);
+    }
+  }
+  return unread;
+}
+
+function chooseUnreadIndex(category) {
+  const unread = getUnreadIndexes(category);
+  if (unread.length > 0) {
+    return randomFrom(unread);
+  }
+  return Math.floor(Math.random() * SPEAKING_DATA[category][1].length);
+}
+
+function getCategoryReadInfo(category) {
+  const total = SPEAKING_DATA[category][1].length;
+  const unread = getUnreadIndexes(category).length;
+  return { total, read: total - unread, unread };
+}
+
 function renderDashboard() {
   document.getElementById("todayCount").textContent = state.progress.todayCount;
   document.getElementById("totalCount").textContent = state.progress.totalCount;
@@ -95,7 +124,8 @@ function renderDashboard() {
   getCategoryEntries().forEach(([key, [name, prompts]]) => {
     const card = document.createElement("button");
     card.className = "category-card";
-    card.innerHTML = `<h3>${name}</h3><p>${prompts.length} testi disponibili</p>`;
+    const info = getCategoryReadInfo(key);
+    card.innerHTML = `<h3>${name}</h3><p>${info.read}/${info.total} letti · ${info.unread} nuovi</p>`;
     card.addEventListener("click", () => openCategory(key));
     categoriesEl.appendChild(card);
   });
@@ -107,7 +137,7 @@ function openCategory(key, index = null) {
   saveProgress();
 
   const prompts = getCurrentPrompts();
-  state.promptIndex = index ?? Math.floor(Math.random() * prompts.length);
+  state.promptIndex = index ?? chooseUnreadIndex(key);
   renderReader();
   showScreen("reader");
 }
@@ -136,16 +166,26 @@ function updateMarkReadButton() {
 }
 
 function nextPrompt() {
-  const prompts = getCurrentPrompts();
-  state.promptIndex = Math.floor(Math.random() * prompts.length);
+  const unread = getUnreadIndexes(state.category).filter(index => index !== state.promptIndex);
+  if (unread.length > 0) {
+    state.promptIndex = randomFrom(unread);
+  } else {
+    const prompts = getCurrentPrompts();
+    state.promptIndex = Math.floor(Math.random() * prompts.length);
+    document.getElementById("encouragement").textContent = "Hai letto tutte le frasi di questa categoria. Ora posso ripescare qualche vecchia gloria.";
+  }
   renderReader();
 }
 
 function markRead() {
-  const key = `${state.category}-${state.promptIndex}`;
+  const key = getReadKey(state.category, state.promptIndex);
+  const alreadyRead = Boolean(state.progress.readItems[key]);
   state.progress.readItems[key] = true;
-  state.progress.todayCount += 1;
-  state.progress.totalCount += 1;
+
+  if (!alreadyRead) {
+    state.progress.todayCount += 1;
+    state.progress.totalCount += 1;
+  }
 
   const today = todayKey();
   if (state.progress.lastReadDate !== today) {
@@ -298,3 +338,4 @@ openCategory = async function(key, index = null) {
 };
 
 renderDashboard();
+
