@@ -165,7 +165,7 @@ function renderReader() {
   updateMarkReadButton();
 
   if (state.readerMicEnabled) {
-    document.getElementById("readerMicStatus").textContent = "Parla ad alta voce: appena ti sento, sblocco il pulsante.";
+    document.getElementById("readerMicStatus").textContent = "Parla con voce normale: appena ti sento, sblocco il pulsante.";
     document.getElementById("readerVolumeBar").style.width = "0%";
   }
 }
@@ -281,38 +281,46 @@ function getMicLevelPercent() {
   const buffer = new Uint8Array(state.analyser.fftSize);
   state.analyser.getByteTimeDomainData(buffer);
 
+  let peak = 0;
   let sumSquares = 0;
+
   for (let i = 0; i < buffer.length; i++) {
-    const value = (buffer[i] - 128) / 128;
+    const value = Math.abs((buffer[i] - 128) / 128);
+    peak = Math.max(peak, value);
     sumSquares += value * value;
   }
 
   const rms = Math.sqrt(sumSquares / buffer.length);
 
-  // Boost intenzionale: voci normali su laptop spesso danno RMS basso.
-  return Math.min(100, Math.round(rms * 420));
+  // Versione molto più sensibile:
+  // RMS = voce continua, PEAK = sillabe brevi.
+  // Molti microfoni nel browser hanno valori bassissimi, quindi serve boost.
+  const level = (rms * 900) + (peak * 120);
+
+  return Math.min(100, Math.round(level));
 }
 
 function calibrateNoiseFloor() {
-  // Calibrazione semplice e continua: parte dal livello ambiente attuale.
+  // Calibrazione morbida: evita che il rumore ambiente alzi troppo la soglia.
   const level = getMicLevelPercent();
+
   if (!state.noiseFloor || state.noiseFloor <= 0) {
-    state.noiseFloor = Math.max(2, level);
-  } else {
-    state.noiseFloor = Math.round((state.noiseFloor * 0.9) + (level * 0.1));
+    state.noiseFloor = Math.min(8, Math.max(1, level));
+  } else if (level < state.noiseFloor + 4) {
+    state.noiseFloor = Math.round((state.noiseFloor * 0.95) + (level * 0.05));
   }
 }
 
 function getSensitivityThreshold(mode) {
   const sliderValue = Number(document.getElementById("sensitivity").value || 45);
 
-  // Slider alto = più difficile. Ma limitiamo per evitare soglie impossibili.
-  const sliderThreshold = Math.max(4, Math.min(32, Math.round(sliderValue / 3)));
+  // Slider basso = facilissimo. Slider alto = più severo, ma mai impossibile.
+  const sliderThreshold = Math.round(2 + (sliderValue / 95) * 16);
 
-  // Serve superare sia una soglia minima sia il rumore di fondo.
-  const noiseThreshold = state.noiseFloor + (mode === "reader" ? 5 : 6);
+  // Reader più facile, controllo iniziale leggermente più severo.
+  const noiseThreshold = state.noiseFloor + (mode === "reader" ? 2 : 3);
 
-  return Math.max(sliderThreshold, noiseThreshold);
+  return Math.max(3, Math.min(20, Math.max(sliderThreshold, noiseThreshold)));
 }
 
 function unlockVoiceCheck() {
@@ -340,7 +348,7 @@ function listenToVoice(mode) {
     const displayPercent = Math.min(100, Math.round((level / Math.max(threshold, 1)) * 65));
 
     if (mode === "check") {
-      document.getElementById("volumeBar").style.width = `${Math.min(100, level * 3)}%`;
+      document.getElementById("volumeBar").style.width = `${Math.min(100, level * 5)}%`;
       document.getElementById("volumeLabel").textContent = `${level}%`;
 
       if (level >= threshold) {
@@ -350,13 +358,13 @@ function listenToVoice(mode) {
       }
 
       // Bastano pochi frame consecutivi: così non serve urlare.
-      if (!state.heardVoice && voiceFrames >= 3) {
+      if (!state.heardVoice && voiceFrames >= 2) {
         unlockVoiceCheck();
       }
     }
 
     if (mode === "reader") {
-      document.getElementById("readerVolumeBar").style.width = `${Math.min(100, level * 3)}%`;
+      document.getElementById("readerVolumeBar").style.width = `${Math.min(100, level * 5)}%`;
 
       if (level >= threshold) {
         voiceFrames += 1;
@@ -364,7 +372,7 @@ function listenToVoice(mode) {
         voiceFrames = Math.max(0, voiceFrames - 1);
       }
 
-      if (!state.readerHeardVoice && voiceFrames >= 3) {
+      if (!state.readerHeardVoice && voiceFrames >= 2) {
         unlockReaderVoice();
       }
     }
@@ -391,7 +399,7 @@ document.getElementById("startMic").addEventListener("click", async () => {
   continueButton.classList.add("locked");
 
   const ok = await startMicrophone("check");
-  if (ok) document.getElementById("micStatus").textContent = "Sto ascoltando. Parla normalmente, non serve urlare.";
+  if (ok) document.getElementById("micStatus").textContent = "Sto ascoltando. Parla normalmente: dovrebbe bastare una voce tranquilla.";
 });
 
 document.getElementById("voiceContinue").addEventListener("click", () => {
