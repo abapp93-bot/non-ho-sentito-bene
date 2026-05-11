@@ -165,7 +165,7 @@ function renderReader() {
   updateMarkReadButton();
 
   if (state.readerMicEnabled) {
-    document.getElementById("readerMicStatus").textContent = "Parla con voce normale: appena ti sento, sblocco il pulsante.";
+    document.getElementById("readerMicStatus").textContent = "Parla con voce normale per un attimo: appena ti sento davvero, sblocco il pulsante.";
     document.getElementById("readerVolumeBar").style.width = "0%";
   }
 }
@@ -292,35 +292,40 @@ function getMicLevelPercent() {
 
   const rms = Math.sqrt(sumSquares / buffer.length);
 
-  // Versione molto più sensibile:
-  // RMS = voce continua, PEAK = sillabe brevi.
-  // Molti microfoni nel browser hanno valori bassissimi, quindi serve boost.
-  const level = (rms * 900) + (peak * 120);
+  // Bilanciato:
+  // - RMS pesa più dei picchi, quindi un colpetto non basta.
+  // - PEAK aiuta solo un po' sulle sillabe.
+  const level = (rms * 620) + (peak * 55);
 
   return Math.min(100, Math.round(level));
 }
 
 function calibrateNoiseFloor() {
-  // Calibrazione morbida: evita che il rumore ambiente alzi troppo la soglia.
   const level = getMicLevelPercent();
 
+  // Calibrazione controllata:
+  // se c'è silenzio, aggiorna il rumore di fondo;
+  // se c'è voce o rumore alto, non rincorrerlo.
   if (!state.noiseFloor || state.noiseFloor <= 0) {
-    state.noiseFloor = Math.min(8, Math.max(1, level));
-  } else if (level < state.noiseFloor + 4) {
-    state.noiseFloor = Math.round((state.noiseFloor * 0.95) + (level * 0.05));
+    state.noiseFloor = Math.min(10, Math.max(2, level));
+  } else if (level <= state.noiseFloor + 3) {
+    state.noiseFloor = Math.round((state.noiseFloor * 0.96) + (level * 0.04));
   }
 }
 
 function getSensitivityThreshold(mode) {
   const sliderValue = Number(document.getElementById("sensitivity").value || 45);
 
-  // Slider basso = facilissimo. Slider alto = più severo, ma mai impossibile.
-  const sliderThreshold = Math.round(2 + (sliderValue / 95) * 16);
+  // Via di mezzo:
+  // 5% circa = molto facile
+  // 45% = normale
+  // 95% = severo, ma non impossibile
+  const sliderThreshold = Math.round(5 + (sliderValue / 95) * 22);
 
-  // Reader più facile, controllo iniziale leggermente più severo.
-  const noiseThreshold = state.noiseFloor + (mode === "reader" ? 2 : 3);
+  // Deve superare anche il rumore ambiente.
+  const noiseThreshold = state.noiseFloor + (mode === "reader" ? 5 : 6);
 
-  return Math.max(3, Math.min(20, Math.max(sliderThreshold, noiseThreshold)));
+  return Math.max(7, Math.min(30, Math.max(sliderThreshold, noiseThreshold)));
 }
 
 function unlockVoiceCheck() {
@@ -341,38 +346,56 @@ function listenToVoice(mode) {
   cancelAnimationFrame(state.volumeLoop);
 
   let voiceFrames = 0;
+  let loudPeakFrames = 0;
 
   function tick() {
     const level = getMicLevelPercent();
     const threshold = getSensitivityThreshold(mode);
-    const displayPercent = Math.min(100, Math.round((level / Math.max(threshold, 1)) * 65));
+
+    // Barra più leggibile, ma non iper-esplosiva.
+    const barWidth = Math.min(100, Math.round((level / Math.max(threshold, 1)) * 75));
 
     if (mode === "check") {
-      document.getElementById("volumeBar").style.width = `${Math.min(100, level * 5)}%`;
+      document.getElementById("volumeBar").style.width = `${barWidth}%`;
       document.getElementById("volumeLabel").textContent = `${level}%`;
 
       if (level >= threshold) {
         voiceFrames += 1;
       } else {
-        voiceFrames = Math.max(0, voiceFrames - 1);
+        voiceFrames = Math.max(0, voiceFrames - 2);
       }
 
-      // Bastano pochi frame consecutivi: così non serve urlare.
-      if (!state.heardVoice && voiceFrames >= 2) {
+      // Picchi molto alti non sbloccano da soli: contano, ma poco.
+      if (level >= threshold * 1.8) {
+        loudPeakFrames += 1;
+      } else {
+        loudPeakFrames = Math.max(0, loudPeakFrames - 1);
+      }
+
+      // Circa mezzo secondo di voce continua a 60fps.
+      // Oppure voce più forte ma comunque non istantanea.
+      if (!state.heardVoice && (voiceFrames >= 24 || (voiceFrames >= 14 && loudPeakFrames >= 5))) {
         unlockVoiceCheck();
       }
     }
 
     if (mode === "reader") {
-      document.getElementById("readerVolumeBar").style.width = `${Math.min(100, level * 5)}%`;
+      document.getElementById("readerVolumeBar").style.width = `${barWidth}%`;
 
       if (level >= threshold) {
         voiceFrames += 1;
       } else {
-        voiceFrames = Math.max(0, voiceFrames - 1);
+        voiceFrames = Math.max(0, voiceFrames - 2);
       }
 
-      if (!state.readerHeardVoice && voiceFrames >= 2) {
+      if (level >= threshold * 1.8) {
+        loudPeakFrames += 1;
+      } else {
+        loudPeakFrames = Math.max(0, loudPeakFrames - 1);
+      }
+
+      // Reader un filo più permissivo, ma sempre anti-colpetto.
+      if (!state.readerHeardVoice && (voiceFrames >= 20 || (voiceFrames >= 12 && loudPeakFrames >= 4))) {
         unlockReaderVoice();
       }
     }
@@ -399,7 +422,7 @@ document.getElementById("startMic").addEventListener("click", async () => {
   continueButton.classList.add("locked");
 
   const ok = await startMicrophone("check");
-  if (ok) document.getElementById("micStatus").textContent = "Sto ascoltando. Parla normalmente: dovrebbe bastare una voce tranquilla.";
+  if (ok) document.getElementById("micStatus").textContent = "Sto ascoltando. Parla normalmente per mezzo secondo, non serve urlare.";
 });
 
 document.getElementById("voiceContinue").addEventListener("click", () => {
